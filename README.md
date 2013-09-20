@@ -20,15 +20,19 @@ Vitamio集成了许多音频和视频的解码包，相比Android内置默认的
 * avi
 * mp4
 * 3gp
+
 ==
 Vitamio官网：
 http://vitamio.org
+
 ==
 我的博客：
 http://www.cnblogs.com/over140/
+
 ==
 Vitamio系列文章：
 http://www.cnblogs.com/over140/category/409230.html
+
 ==
 依赖Vitamio，下载最新的Vitamio：
 https://github.com/yixia/VitamioBundle

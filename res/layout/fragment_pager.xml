@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:gravity="center_horizontal"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<RadioGroup android:gravity="center_vertical"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		<RadioButton android:id="@+id/radio_file" android:checked="true"
+			style="@style/main_tab_bottom" android:drawableTop="@drawable/video_file"
+			android:text="@string/title_file" />
+		<RadioButton android:id="@+id/radio_online"
+			android:drawableTop="@drawable/video_online" style="@style/main_tab_bottom"
+			android:text="@string/title_online" />
+	</RadioGroup>
+	<android.support.v4.view.ViewPager
+		android:background="@color/background" android:id="@+id/pager"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+	</android.support.v4.view.ViewPager>
+</LinearLayout>

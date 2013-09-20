@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearlayout_row"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:layout_width="92.0dip"
+        android:layout_height="68.0dip"
+        android:scaleType="fitXY"
+        android:src="@drawable/video_back" />
+
+    <ImageView
+        android:id="@+id/thumbnail"
+        android:layout_width="83.0dip"
+        android:layout_height="60.0dip"
+        layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4.0dip"
+        android:background="@drawable/default_thumbnail"
+        android:scaleType="fitXY" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10.0dip"
+        android:layout_marginTop="5.0dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toLeftOf="@+id/status"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="2"
+        android:singleLine="false"
+        android:textColor="@color/title"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/title"
+        android:layout_marginLeft="10.0dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:paddingBottom="3.0dip"
+        android:textColor="@color/title"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="4.0dip"
+        android:layout_marginRight="4.0dip"
+        android:visibility="gone" />
+
+</RelativeLayout>

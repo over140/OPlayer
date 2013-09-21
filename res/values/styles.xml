@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@color/background_dark</item>
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="Widget.ZI.SeekBar" parent="android:Widget.SeekBar">
+        <item name="android:progressDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
+        <item name="android:indeterminateDrawable">@drawable/scrubber_progress_horizontal_holo_dark</item>
+        <item name="android:minHeight">13dip</item>
+        <item name="android:maxHeight">13dip</item>
+        <item name="android:thumb">@drawable/scrubber_control_selector_holo</item>
+        <item name="android:thumbOffset">16dip</item>
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+    </style>
+
     <style name="main_tab_bottom">
         <item name="android:textSize">12.0sp</item>
         <item name="android:textColor">#ffffffff</item>
@@ -22,6 +52,28 @@
         <item name="android:maxHeight">16dip</item>
         <item name="android:progressDrawable">@drawable/mediacontroller_seekbar</item>
         <item name="android:thumb">@drawable/mediacontroller_seekbar_thumb</item>
+    </style>
+
+    <style name="MediaController_Text">
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="InfoPanel_Container">
+        <item name="android:background">@color/mediacontroller_bg</item>
+    </style>
+
+    <style name="MediaController_Container">
+        <item name="android:background">@color/mediacontroller_bg</item>
+        <item name="android:paddingTop">4dip</item>
+        <item name="android:paddingBottom">8dip</item>
+        <item name="android:paddingLeft">8dip</item>
+        <item name="android:paddingRight">8dip</item>
+    </style>
+
+    <style name="MediaController_Button">
+        <item name="android:background">@drawable/mediacontroller_btn_bg</item>
     </style>
 
     <style name="MediaController_Text">

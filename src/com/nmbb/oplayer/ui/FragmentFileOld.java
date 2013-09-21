@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,9 +42,11 @@ import com.nmbb.oplayer.service.MediaScannerService.IMediaScannerObserver;
 import com.nmbb.oplayer.service.MediaScannerService.MediaScannerServiceBinder;
 import com.nmbb.oplayer.ui.base.ArrayAdapter;
 import com.nmbb.oplayer.ui.helper.FileDownloadHelper;
+import com.nmbb.oplayer.ui.player.VideoActivity;
 import com.nmbb.oplayer.util.FileUtils;
 
-public class FragmentFileOld extends FragmentBase implements OnItemClickListener, IMediaScannerObserver {
+public class FragmentFileOld extends FragmentBase implements
+		OnItemClickListener, IMediaScannerObserver {
 
 	private FileAdapter mAdapter;
 	private FileAdapter mDownloadAdapter;
@@ -67,17 +70,21 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
-			mMediaScannerService = ((MediaScannerServiceBinder) service).getService();
+			mMediaScannerService = ((MediaScannerServiceBinder) service)
+					.getService();
 			mMediaScannerService.addObserver(FragmentFileOld.this);
-			//			Toast.makeText(ComponentServiceActivity.this, "Service绑定成功!", Toast.LENGTH_SHORT).show();
+			// Toast.makeText(ComponentServiceActivity.this, "Service绑定成功!",
+			// Toast.LENGTH_SHORT).show();
 		}
 	};
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		View v = super.onCreateView(inflater, container, savedInstanceState);
 		// ~~~~~~~~~ 绑定控件
-		first_letter_overlay = (TextView) v.findViewById(R.id.first_letter_overlay);
+		first_letter_overlay = (TextView) v
+				.findViewById(R.id.first_letter_overlay);
 		alphabet_scroller = (ImageView) v.findViewById(R.id.alphabet_scroller);
 		mTempListView = (ListView) v.findViewById(R.id.templist);
 		mSDAvailable = (TextView) v.findViewById(R.id.sd_block);
@@ -93,12 +100,15 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 		// ~~~~~~~~~ 加载数据
 		mParent = (MainActivity) getActivity();
-		//		if (new SQLiteHelper(getActivity()).isEmpty())
-		//			new ScanVideoTask().execute();
-		//		else
+		// if (new SQLiteHelper(getActivity()).isEmpty())
+		// new ScanVideoTask().execute();
+		// else
 		new DataTask().execute();
 
-		getActivity().bindService(new Intent(getActivity().getApplicationContext(), MediaScannerService.class), mMediaScannerServiceConnection, Context.BIND_AUTO_CREATE);
+		getActivity().bindService(
+				new Intent(getActivity().getApplicationContext(),
+						MediaScannerService.class),
+				mMediaScannerServiceConnection, Context.BIND_AUTO_CREATE);
 		return v;
 	}
 
@@ -115,22 +125,24 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 	/**
 	 * 
-	 * @param flag 0 开始扫描 1 正在扫描 2 扫描完成
-	 * @param file 扫描到的视频文件
+	 * @param flag
+	 *            0 开始扫描 1 正在扫描 2 扫描完成
+	 * @param file
+	 *            扫描到的视频文件
 	 */
 	@Override
 	public void update(int flag, POMedia media) {
-		//		Logger.i(flag + " " + media.path);
+		// Logger.i(flag + " " + media.path);
 		switch (flag) {
 		case MediaScannerService.SCAN_STATUS_START:
 
 			break;
-		case MediaScannerService.SCAN_STATUS_END://扫描完成
+		case MediaScannerService.SCAN_STATUS_END:// 扫描完成
 			if (mProgress != null)
 				mProgress.setVisibility(View.GONE);
 			new DataTask().execute();
 			break;
-		case MediaScannerService.SCAN_STATUS_RUNNING://扫到一个文件
+		case MediaScannerService.SCAN_STATUS_RUNNING:// 扫到一个文件
 			if (mAdapter != null && media != null) {
 				mAdapter.add(media);
 				mAdapter.notifyDataSetChanged();
@@ -143,7 +155,7 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 	public void onResume() {
 		super.onResume();
 
-		//SD卡剩余数量
+		// SD卡剩余数量
 		mSDAvailable.setText(FileUtils.showFileAvailable());
 
 		if (MediaScannerService.isRunning())
@@ -154,7 +166,8 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 	ListView.OnCreateContextMenuListener OnListViewMenu = new ListView.OnCreateContextMenuListener() {
 		@Override
-		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		public void onCreateContextMenu(ContextMenu menu, View v,
+				ContextMenuInfo menuInfo) {
 			menu.setHeaderTitle(R.string.file_oper);
 			menu.add(0, 0, 0, R.string.file_rename);
 			menu.add(0, 1, 0, R.string.file_delete);
@@ -164,7 +177,8 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 	ListView.OnCreateContextMenuListener OnTempListViewMenu = new ListView.OnCreateContextMenuListener() {
 
 		@Override
-		public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		public void onCreateContextMenu(ContextMenu menu, View v,
+				ContextMenuInfo menuInfo) {
 			menu.setHeaderTitle(R.string.file_oper);
 			menu.add(0, 2, 0, R.string.file_rename);
 			menu.add(0, 3, 0, R.string.file_delete);
@@ -184,67 +198,91 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 			deleteFile(mAdapter, mAdapter.getItem(position), position);
 			break;
 		case 2:
-			renameFile(mDownloadAdapter, mDownloadAdapter.getItem(position), position);
+			renameFile(mDownloadAdapter, mDownloadAdapter.getItem(position),
+					position);
 			break;
 		case 3:
-			deleteFile(mDownloadAdapter, mDownloadAdapter.getItem(position), position);
+			deleteFile(mDownloadAdapter, mDownloadAdapter.getItem(position),
+					position);
 			break;
 		}
 		return super.onContextItemSelected(item);
 	};
 
 	/** 删除文件 */
-	private void deleteFile(final FileAdapter adapter, final POMedia f, final int position) {
-		new AlertDialog.Builder(getActivity()).setIcon(android.R.drawable.ic_dialog_alert).setTitle(R.string.file_delete).setMessage(getString(R.string.file_delete_confirm, f.title)).setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				try {
-					File file = new File(f.path);
-					if (file.canRead() && file.exists())
-						file.delete();
+	private void deleteFile(final FileAdapter adapter, final POMedia f,
+			final int position) {
+		new AlertDialog.Builder(getActivity())
+				.setIcon(android.R.drawable.ic_dialog_alert)
+				.setTitle(R.string.file_delete)
+				.setMessage(getString(R.string.file_delete_confirm, f.title))
+				.setNegativeButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								try {
+									File file = new File(f.path);
+									if (file.canRead() && file.exists())
+										file.delete();
 
-					//					FileBusiness.deleteFile(getActivity(), f);
-					new DbHelper<POMedia>().remove(f);
-					adapter.delete(position);
-				} catch (Exception e) {
+									// FileBusiness.deleteFile(getActivity(),
+									// f);
+									new DbHelper<POMedia>().remove(f);
+									adapter.delete(position);
+								} catch (Exception e) {
 
-				}
-			}
+								}
+							}
 
-		}).setPositiveButton(android.R.string.no, null).show();
+						}).setPositiveButton(android.R.string.no, null).show();
 	}
 
 	/** 重命名文件 */
-	private void renameFile(final FileAdapter adapter, final POMedia f, final int position) {
+	private void renameFile(final FileAdapter adapter, final POMedia f,
+			final int position) {
 		final EditText et = new EditText(getActivity());
 		et.setText(f.title);
-		new AlertDialog.Builder(getActivity()).setTitle(R.string.file_rename).setIcon(android.R.drawable.ic_dialog_info).setView(et).setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+		new AlertDialog.Builder(getActivity())
+				.setTitle(R.string.file_rename)
+				.setIcon(android.R.drawable.ic_dialog_info)
+				.setView(et)
+				.setNegativeButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				String name = et.getText().toString().trim();
-				if (name == null || name.trim().equals("") || name.trim().equals(f.title))
-					return;
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								String name = et.getText().toString().trim();
+								if (name == null || name.trim().equals("")
+										|| name.trim().equals(f.title))
+									return;
 
-				try {
-					File fromFile = new File(f.path);
-					File nf = new File(fromFile.getParent(), name.trim());
-					if (nf.exists()) {
-						Toast.makeText(getActivity(), R.string.file_rename_exists, Toast.LENGTH_LONG).show();
-					} else if (fromFile.renameTo(nf)) {
-						f.title = name;
-						f.path = nf.getPath();
-						//						FileBusiness.renameFile(getActivity(), f);
+								try {
+									File fromFile = new File(f.path);
+									File nf = new File(fromFile.getParent(),
+											name.trim());
+									if (nf.exists()) {
+										Toast.makeText(getActivity(),
+												R.string.file_rename_exists,
+												Toast.LENGTH_LONG).show();
+									} else if (fromFile.renameTo(nf)) {
+										f.title = name;
+										f.path = nf.getPath();
+										// FileBusiness.renameFile(getActivity(),
+										// f);
 
-						new DbHelper<POMedia>().update(f);
-						adapter.notifyDataSetChanged();
-					}
-				} catch (SecurityException se) {
-					Toast.makeText(getActivity(), R.string.file_rename_failed, Toast.LENGTH_LONG).show();
-				}
-			}
+										new DbHelper<POMedia>().update(f);
+										adapter.notifyDataSetChanged();
+									}
+								} catch (SecurityException se) {
+									Toast.makeText(getActivity(),
+											R.string.file_rename_failed,
+											Toast.LENGTH_LONG).show();
+								}
+							}
 
-		}).setPositiveButton(android.R.string.no, null).show();
+						}).setPositiveButton(android.R.string.no, null).show();
 	}
 
 	public Handler mDownloadHandler = new Handler() {
@@ -253,14 +291,15 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 			POMedia p;
 			String url = msg.obj.toString();
 			switch (msg.what) {
-			case FileDownloadHelper.MESSAGE_START://开始下载
+			case FileDownloadHelper.MESSAGE_START:// 开始下载
 				p = new POMedia();
 				p.path = mParent.mFileDownload.mDownloadUrls.get(url);
 				p.title = new File(p.path).getName();
 				p.status = 0;
 				p.file_size = 0;
 				if (mDownloadAdapter == null) {
-					mDownloadAdapter = new FileAdapter(getActivity(), new ArrayList<POMedia>());
+					mDownloadAdapter = new FileAdapter(getActivity(),
+							new ArrayList<POMedia>());
 					mDownloadAdapter.add(p, url);
 					mTempListView.setAdapter(mDownloadAdapter);
 					mTempListView.setVisibility(View.VISIBLE);
@@ -269,7 +308,7 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 					mDownloadAdapter.notifyDataSetChanged();
 				}
 				break;
-			case FileDownloadHelper.MESSAGE_PROGRESS://正在下载
+			case FileDownloadHelper.MESSAGE_PROGRESS:// 正在下载
 				p = mDownloadAdapter.getItem(url);
 				p.temp_file_size = msg.arg1;
 				p.file_size = msg.arg2;
@@ -279,10 +318,10 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 				p.status = status;
 				mDownloadAdapter.notifyDataSetChanged();
 				break;
-			case FileDownloadHelper.MESSAGE_STOP://下载结束
+			case FileDownloadHelper.MESSAGE_STOP:// 下载结束
 				p = mDownloadAdapter.getItem(url);
 				new DbHelper<POMedia>().create(p);
-				//				FileBusiness.insertFile(getActivity(), p);
+				// FileBusiness.insertFile(getActivity(), p);
 				break;
 			case FileDownloadHelper.MESSAGE_ERROR:
 				Toast.makeText(getActivity(), url, Toast.LENGTH_LONG).show();
@@ -294,11 +333,14 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 	/** 单击启动播放 */
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		final POMedia f = parent == mListView ? mAdapter.getItem(position) : mDownloadAdapter.getItem(position);
-		Intent intent = new Intent(getActivity(), VideoPlayerActivity.class);
-		intent.putExtra("path", f.path);
-		intent.putExtra("title", f.title);
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		final POMedia f = parent == mListView ? mAdapter.getItem(position)
+				: mDownloadAdapter.getItem(position);
+		Intent intent = new Intent(getActivity(), VideoActivity.class);
+		intent.setData(Uri.parse(f.path));
+		// intent.putExtra("path", f.path);
+		intent.putExtra("displayName", f.title);
 		startActivity(intent);
 	}
 
@@ -341,22 +383,27 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 		public View getView(int position, View convertView, ViewGroup parent) {
 			final POMedia f = getItem(position);
 			if (convertView == null) {
-				final LayoutInflater mInflater = getActivity().getLayoutInflater();
-				convertView = mInflater.inflate(R.layout.fragment_file_item, null);
+				final LayoutInflater mInflater = getActivity()
+						.getLayoutInflater();
+				convertView = mInflater.inflate(R.layout.fragment_file_item,
+						null);
 			}
 			((TextView) convertView.findViewById(R.id.title)).setText(f.title);
 
-			//显示文件大小
+			// 显示文件大小
 			String file_size;
 			if (f.temp_file_size > 0) {
-				file_size = FileUtils.showFileSize(f.temp_file_size) + " / " + FileUtils.showFileSize(f.file_size);
+				file_size = FileUtils.showFileSize(f.temp_file_size) + " / "
+						+ FileUtils.showFileSize(f.file_size);
 			} else {
 				file_size = FileUtils.showFileSize(f.file_size);
 			}
-			((TextView) convertView.findViewById(R.id.file_size)).setText(file_size);
+			((TextView) convertView.findViewById(R.id.file_size))
+					.setText(file_size);
 
-			//显示进度表
-			final ImageView status = (ImageView) convertView.findViewById(R.id.status);
+			// 显示进度表
+			final ImageView status = (ImageView) convertView
+					.findViewById(R.id.status);
 			if (f.status > -1) {
 				int resStauts = getStatusImage(f.status);
 				if (resStauts > 0) {
@@ -497,64 +544,65 @@ public class FragmentFileOld extends FragmentBase implements OnItemClickListener
 
 	// ~~~~~~~~~~~~~~ 后续弃用，直接使用Vitamio提供的
 
-	//	/** 扫描SD卡 */
-	//	private class ScanVideoTask extends AsyncTask<Void, File, ArrayList<PFile>> {
-	//		private ProgressDialog pd;
-	//		private ArrayList<File> files = new ArrayList<File>();
+	// /** 扫描SD卡 */
+	// private class ScanVideoTask extends AsyncTask<Void, File,
+	// ArrayList<PFile>> {
+	// private ProgressDialog pd;
+	// private ArrayList<File> files = new ArrayList<File>();
 	//
-	//		@Override
-	//		protected void onPreExecute() {
-	//			super.onPreExecute();
-	//			pd = new ProgressDialog(getActivity());
-	//			pd.setMessage("正在扫描视频文件...");
-	//			pd.setCanceledOnTouchOutside(false);
-	//			pd.setCancelable(false);
-	//			pd.show();
-	//		}
+	// @Override
+	// protected void onPreExecute() {
+	// super.onPreExecute();
+	// pd = new ProgressDialog(getActivity());
+	// pd.setMessage("正在扫描视频文件...");
+	// pd.setCanceledOnTouchOutside(false);
+	// pd.setCancelable(false);
+	// pd.show();
+	// }
 	//
-	//		@Override
-	//		protected ArrayList<PFile> doInBackground(Void... params) {
-	//			// ~~~ 遍历文件夹
-	//			eachAllMedias(Environment.getExternalStorageDirectory());
+	// @Override
+	// protected ArrayList<PFile> doInBackground(Void... params) {
+	// // ~~~ 遍历文件夹
+	// eachAllMedias(Environment.getExternalStorageDirectory());
 	//
-	//			// ~~~ 提取缩略图、视频尺寸等。
-	//			FileBusiness.batchBuildThumbnail(getActivity(), files);
+	// // ~~~ 提取缩略图、视频尺寸等。
+	// FileBusiness.batchBuildThumbnail(getActivity(), files);
 	//
-	//			// ~~~ 入库
-	//			FileBusiness.batchInsertFiles(getActivity(), files);
+	// // ~~~ 入库
+	// FileBusiness.batchInsertFiles(getActivity(), files);
 	//
-	//			// ~~~ 查询数据
-	//			return FileBusiness.getAllSortFiles(getActivity());
-	//		}
+	// // ~~~ 查询数据
+	// return FileBusiness.getAllSortFiles(getActivity());
+	// }
 	//
-	//		@Override
-	//		protected void onProgressUpdate(final File... values) {
-	//			pd.setMessage(values[0].getName());
-	//		}
+	// @Override
+	// protected void onProgressUpdate(final File... values) {
+	// pd.setMessage(values[0].getName());
+	// }
 	//
-	//		/** 遍历所有文件夹，查找出视频文件 */
-	//		public void eachAllMedias(File f) {
-	//			if (f != null && f.exists() && f.isDirectory()) {
-	//				File[] files = f.listFiles();
-	//				if (files != null) {
-	//					for (File file : f.listFiles()) {
-	//						if (file.isDirectory()) {
-	//							eachAllMedias(file);
-	//						} else if (file.exists() && file.canRead() && FileUtils.isVideo(file)) {
-	//							this.files.add(file);
-	//						}
-	//						publishProgress(file);
-	//					}
-	//				}
-	//			}
-	//		}
+	// /** 遍历所有文件夹，查找出视频文件 */
+	// public void eachAllMedias(File f) {
+	// if (f != null && f.exists() && f.isDirectory()) {
+	// File[] files = f.listFiles();
+	// if (files != null) {
+	// for (File file : f.listFiles()) {
+	// if (file.isDirectory()) {
+	// eachAllMedias(file);
+	// } else if (file.exists() && file.canRead() && FileUtils.isVideo(file)) {
+	// this.files.add(file);
+	// }
+	// publishProgress(file);
+	// }
+	// }
+	// }
+	// }
 	//
-	//		@Override
-	//		protected void onPostExecute(ArrayList<PFile> result) {
-	//			super.onPostExecute(result);
-	//			mAdapter = new FileAdapter(getActivity(), result);
-	//			mListView.setAdapter(mAdapter);
-	//			pd.dismiss();
-	//		}
-	//	}
+	// @Override
+	// protected void onPostExecute(ArrayList<PFile> result) {
+	// super.onPostExecute(result);
+	// mAdapter = new FileAdapter(getActivity(), result);
+	// mListView.setAdapter(mAdapter);
+	// pd.dismiss();
+	// }
+	// }
 }

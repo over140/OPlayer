@@ -24,7 +24,8 @@
     <application
         android:name=".OPlayerApplication"
         android:icon="@drawable/icon"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".ui.MainActivity"
             android:configChanges="orientation|keyboard|keyboardHidden|navigation"
@@ -38,10 +39,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.VideoPlayerActivity"
-            android:configChanges="orientation|keyboard|keyboardHidden|navigation"
+            android:name=".ui.player.VideoActivity"
+            android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:label="@string/app_name"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+            android:launchMode="singleTop"
+            android:process=":vitamio"
+            android:screenOrientation="landscape"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -241,16 +246,16 @@
         </receiver>
 
         <service
+            android:name=".ui.player.PlayerService"
+            android:process=":vitamio" />
+        <service
             android:name="io.vov.vitamio.VitamioService"
             android:exported="false" >
             <intent-filter>
                 <action android:name="io.vov.vitamio.IVitamioService" />
             </intent-filter>
         </service>
-        
         <service android:name=".service.MediaScannerService" />
-        
-        
     </application>
 
 </manifest>

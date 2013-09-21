@@ -10,4 +10,9 @@
     <color name="background">#ffc3ddea</color>
     <color name="yellow">#ffffcc00</color>
     <color name="title">#ff274462</color>
+    <color name="gray">#808080ff</color>
+    <color name="transparent">#00000000</color>
+    <color name="mediacontroller_bg_pressed">#ff53c1bd</color>
+    <color name="mediacontroller_bg">#99000000</color>
+    <color name="background_dark">#f4f4f4</color>
 </resources>

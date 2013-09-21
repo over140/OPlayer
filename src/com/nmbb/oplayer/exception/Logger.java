@@ -104,6 +104,12 @@ public class Logger {
 			Log.e(tag, msg, tr);
 		}
 	}
+	
+	public static void e(String msg, Throwable tr) {
+		if (isLog) {
+			Log.e(TAG, msg, tr);
+		}
+	}
 
 	public static void systemErr(String msg) {
 		// if (true) {
